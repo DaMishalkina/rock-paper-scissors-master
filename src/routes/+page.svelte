@@ -1,17 +1,41 @@
 <script>
     import CloseIcon from "../components/svgs/CloseIcon.svelte";
+    import Lizard from "$lib/assets/icon-lizard.svg";
+    import Paper from "$lib/assets/icon-paper.svg";
+    import Pentagon from "$lib/assets/bg-pentagon.svg";
+    import Rock from "$lib/assets/icon-rock.svg";
     import RulesIcon from "../components/svgs/RulesIcon.svelte";
+    import Scissors from "$lib/assets/icon-scissors.svg";
     import { score } from "../stores/score.ts";
-
+    import Spock from "$lib/assets/icon-spock.svg";
     let areRulesOpened = false;
-    const roles = ["rock", "paper", "scissors", "lizard", "spock"];
-    const playBible = {
-        "rock": ["lizard", "scissors"],
-        "scissors": ["paper", "lizard"],
-        "paper": ["rock", "spock"],
-        "lizard": ["paper", "spock"],
-        "spock": ["rock", "scissors"]
-    }
+    const roles = {
+        "rock": {
+            imageUrl: Rock,
+            defeat: ["lizard", "scissors"],
+            color: "linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))"
+        },
+        "paper": {
+            imageUrl: Paper,
+            defeat:  ["rock", "spock"],
+            color: "linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))"
+        },
+        "scissors": {
+            imageUrl: Scissors,
+            defeat:  ["paper", "lizard"],
+            color: "linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%))"
+        },
+        "lizard": {
+            imageUrl: Lizard,
+            defeat: ["paper", "spock"],
+            color: "linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%))"
+        },
+        "spock": {
+            imageUrl: Spock,
+            defeat: ["rock", "scissors"],
+            color: "linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%))"
+        }
+    };
     // let chatGPTResponse = "";
     // import axios from "axios";
     let playerMove = "";
@@ -46,11 +70,11 @@
     //     }
     // }
     async function handlePlayerMove() {
-        computerMove = roles[Math.floor(Math.random() * 5)];
+        computerMove = Object.keys(roles)[Math.floor(Math.random() * 5)];
         if (computerMove === playerMove) {
             resultMessage = "Draw";
         }
-        else if (playBible[computerMove].indexOf(playerMove) > -1){
+        else if (roles[computerMove].defeat.indexOf(playerMove) > -1){
             resultMessage = "You lose";
         } else  {
             resultMessage = "You win";
@@ -72,12 +96,16 @@
 
 </script>
 
-<div>
-    <header class="">
-        <h1>Rock Paper Scissors Lizard Spock</h1>
-        <div>
-            <p>Score</p>
-            <p>{$score}</p>
+<div class="content-container">
+    <header class="header">
+        <h1 class="content-container__title">
+            {#each Object.keys(roles) as role}
+                {role}<br/>
+            {/each}
+        </h1>
+        <div class="score-container header__score-container">
+            <p class="score-container__title">Score</p>
+            <p class="score-container__value">{$score}</p>
         </div>
     </header>
     <main class="main">
@@ -96,26 +124,50 @@
                 </div>
             </section>
         {/if}
-        <ul>
-            {#each roles as role, i (i)}
-                <li>
-                    <button on:click={() => {
-                        playerMove = role
-                        handlePlayerMove()
-                    }}>{role}</button>
-                </li>
-            {/each}
-        </ul>
-        {#if computerMove.length > 0}
-            <p>{computerMove}</p>
-        {/if}
-        {#if resultMessage.length > 0}
-            <section>
-                <p>{resultMessage}</p>
-                <button on:click={() => handlePlayAgainButton()}>Play again</button>
-            </section>
-
-        {/if}
+        <section class="game-board main__game-board">
+            <img
+                    class="game-board__bg"
+                    src={Pentagon}
+                    alt="Pentagon background"
+            />
+            {#if playerMove.length === 0}
+                <ul class="roles-list game_board__roles-list">
+                    {#each Object.entries(roles) as [role, {imageUrl, color}], i (i)}
+                        <li class="role roles-list__item">
+                            <button
+                                    class="role__button"
+                                    style="background: {color}"
+                                    on:click={() => {
+                                        playerMove = role;
+                                        handlePlayerMove()
+                                    }}
+                            >
+                                <span class="role__image-wrapper">
+                                     <img
+                                             class="role__icon"
+                                             src={imageUrl}
+                                             alt={role}
+                                     />
+                                </span>
+                            </button>
+                        </li>
+                    {/each}
+                </ul>
+            {:else}
+                <div>
+                    <div>{playerMove}</div>
+                    <div>
+                        {#if computerMove.length > 0}
+                            <p>{computerMove}</p>
+                        {/if}
+                    </div>
+                </div>
+            {/if}
+        </section>
+        <div class:hidden={resultMessage.length === 0}>
+            <p>{resultMessage}</p>
+            <button on:click={() => handlePlayAgainButton()}>Play again</button>
+        </div>
     </main>
     <label class="rules-checkbox">
         <input
@@ -134,14 +186,17 @@
         padding: 0;
         box-sizing: border-box;
     }
-    :global(body) {
-        font-family: "Barlow Semi Condensed", sans-serif;
-        background: radial-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
-        height: 100vh;
-        overflow: hidden;
+    :root {
         --text-color: #fff;
         --border-color: hsl(217, 16%, 45%);
         --dark-text-color: hsl(229, 25%, 31%);
+        --score-text-color: hsl(229, 64%, 46%);
+    }
+    :global(body) {
+        font-family: "Barlow Semi Condensed", sans-serif;
+        background: linear-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
+        height: 100dvh;
+        overflow: hidden;
         color: var(--text-color);
         text-transform: uppercase;
         margin: 0;
@@ -158,22 +213,31 @@
     :global(button):focus {
         outline: none;
     }
-    .main {
-        position: relative;
+    :global(ul){
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .content-container {
+        padding: 30px;
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100dvh;
     }
     
     .rules-checkbox {
-        position: absolute;
-        bottom: 55px;
-        right: 50%;
-        transform: translate(50%, 0);
+        /*position: absolute;*/
+        /*bottom: 55px;*/
+        /*right: 50%;*/
+        /*transform: translate(50%, 0);*/
         font-size: 16px;
         padding: 15px 38px 12px 38px;
         border: 2px solid var(--border-color);
-        border-radius: 10px;
+        border-radius: 8px;
         cursor: pointer;
         letter-spacing: 0.25em;
+        align-self: center;
     }
     .rules-checkbox__input {
         height: 0;
@@ -194,7 +258,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
-        height: 100vh;
+        height: 100dvh;
         background: #fff;
         color: var(--dark-text-color);
         /*position: absolute;*/
@@ -220,5 +284,115 @@
         width: 20px;
         height: 20px;
     }
+    .header {
+        border: 2px solid var(--border-color);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px 10px 22px;
+    }
+    .content-container__title {
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 16px;
+    }
+    .header__score-container {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 14px 24px;
+        border-radius: 4px;
 
+    }
+    .score-container__title {
+        font-size: 14px;
+        color: var(--score-text-color);
+    }
+    .score-container__value {
+        font-size: 32px;
+        color: var(--dark-text-color);
+    }
+    .hidden {
+        visibility: hidden;
+    }
+    .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        flex: 1;
+    }
+
+    .game-board {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .game-board__bg {
+        max-width: 100%;
+    }
+    .roles-list {
+       position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+    }
+    .role {
+        position: absolute;
+    }
+    .role:nth-child(1){
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -25%);
+    }
+    .role:nth-child(2){
+        left: 0;
+        top: 50%;
+        transform: translate(0, -75%);
+    }
+    .role:nth-child(3){
+        right: 0;
+        top: 50%;
+        transform: translate(0, -75%);
+    }
+    .role:nth-child(4){
+        left: 0;
+        bottom: 0;
+        transform: translate(50%, 25%);
+    }
+    .role:nth-child(5){
+        right: 0;
+        bottom: 0;
+        transform: translate(-50%, 25%);
+    }
+
+
+
+    .role__button {
+        padding: 11px;
+        border-radius: 100px;
+        height: 97px;
+        width: 97px;
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+    }
+    .role__image-wrapper {
+        background: #fff;
+        border-radius: 100px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+    }
+    .role__icon {
+        max-height: 40px;
+        max-width: 42px;
+    }
 </style>
