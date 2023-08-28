@@ -13,27 +13,32 @@
         "scissors": {
             imageUrl: Scissors,
             defeat:  ["paper", "lizard"],
-            color: "linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%))"
+            linearGradient: "linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%))",
+            shadowColor: "#c96d1d"
         },
         "spock": {
             imageUrl: Spock,
             defeat: ["rock", "scissors"],
-            color: "linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%))"
+            linearGradient: "linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%))",
+            shadowColor: "#2B8CAF"
         },
         "lizard": {
             imageUrl: Lizard,
             defeat: ["paper", "spock"],
-            color: "linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%))"
+            linearGradient: "linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%))",
+            shadowColor: "#6038AB"
         },
         "rock": {
             imageUrl: Rock,
             defeat: ["lizard", "scissors"],
-            color: "linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))"
+            linearGradient: "linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))",
+            shadowColor: "#9e152e"
         },
         "paper": {
             imageUrl: Paper,
             defeat:  ["rock", "spock"],
-            color: "linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))"
+            linearGradient: "linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))",
+            shadowColor: "#2740be"
         }
     };
     // let chatGPTResponse = "";
@@ -125,11 +130,11 @@
         <section class="game-board main__game-board">
             {#if playerMove.length === 0}
                 <ul class="roles-list game_board__roles-list">
-                    {#each Object.entries(roles) as [role, {imageUrl, color}], i (i)}
+                    {#each Object.entries(roles) as [role, {imageUrl, shadowColor, linearGradient}], i (i)}
                         <li class="role roles-list__item">
                             <button
                                     class="role-chip"
-                                    style="background: {color}"
+                                    style="background: {linearGradient}; box-shadow: 0 4px 0 {shadowColor}"
                                     on:click={() => {
                                         playerMove = role;
                                         handlePlayerMove()
@@ -152,7 +157,7 @@
                         <li class="moves__item">
                             <div
                                     class="role-chip"
-                                    style="background: {roles[playerMove].color}"
+                                    style="background: {roles[playerMove].linearGradient}; box-shadow: 0 4px 0 {roles[playerMove].shadowColor}"
                             >
                                 <div class="role-chip__image-wrapper">
                                     <img
@@ -165,27 +170,24 @@
                             <p>You picked</p>
                         </li>
                         <li class="move moves__item">
-                            <!--{#if computerMove.length > 0}-->
-                            <!--    <div-->
-                            <!--            class="role-chip computer-move"-->
-                            <!--            style="background: {roles[computerMove].color}"-->
-                            <!--    >-->
-                            <!--        <div class="role-chip__image-wrapper">-->
-                            <!--            <img-->
-                            <!--                    class="role-chip__icon"-->
-                            <!--                    src={roles[computerMove].imageUrl}-->
-                            <!--                    alt={computerMove}-->
-                            <!--            />-->
-                            <!--        </div>-->
-                            <!--    </div>-->
-                            <!--{:else}-->
-                            <!--    <div class="move__empty-content">-->
+                            {#if computerMove.length > 0}
+                                <div
+                                        class="role-chip computer-move"
+                                        style="background: {roles[computerMove].linearGradient}; box-shadow: 0 4px 0 {roles[computerMove].shadowColor}"
+                                >
+                                    <div class="role-chip__image-wrapper">
+                                        <img
+                                                class="role-chip__icon"
+                                                src={roles[computerMove].imageUrl}
+                                                alt={computerMove}
+                                        />
+                                    </div>
+                                </div>
+                            {:else}
+                                <div class="move__empty-content">
 
-                            <!--    </div>-->
-                            <!--{/if}-->
-                            <div class="move__empty-content">
-
-                            </div>
+                                </div>
+                            {/if}
                             <p>The house picked</p>
                         </li>
                     </ul>
@@ -237,6 +239,7 @@
         font-weight: 600;
     }
     :global(button) {
+        font-family: "Barlow Semi Condensed", sans-serif;
         cursor: pointer;
         padding: 0;
         margin: 0;
@@ -409,7 +412,6 @@
         box-sizing: border-box;
         justify-content: center;
         align-items: center;
-        box-shadow: rgba(50, 50, 93, 0.25) 0 50px 100px -20px, rgba(0, 0, 0, 0.3) 0 30px 60px -30px, rgba(10, 37, 64, 0.35) 0 -2px 6px 0 inset;
     }
     .role-chip__image-wrapper {
         background: #fff;
@@ -420,6 +422,7 @@
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
+        box-shadow: inset 0 5px 0 rgba(96,110,133,.25);
     }
     .role-chip__icon {
         max-height: 40px;
@@ -448,5 +451,26 @@
         border-radius: 100px;
         background: #1A2946;
         box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
+    }
+    .action-container__float-content {
+        display: flex;
+        flex-direction: column;
+        gap: 27px;
+        justify-content: center;
+        align-items: center;
+    }
+    .action-container__message {
+        font-size: 40px;
+        font-weight: 700;
+    }
+    .action-container__button {
+        background: #fff;
+        border-radius: 6px;
+        color: var(--dark-text-color);
+        font-size: 16px;
+        padding: 20px 60px 17px 60px;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        font-weight: 600;
     }
 </style>
