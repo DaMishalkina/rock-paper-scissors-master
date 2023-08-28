@@ -1,10 +1,11 @@
 <script>
-    import CloseIcon from "../components/svgs/CloseIcon.svelte";
+    import CloseIcon from "../lib/components/svgs/CloseIcon.svelte";
     import Lizard from "$lib/assets/icon-lizard.svg";
     import Logo from "$lib/assets/logo-bonus.svg"
     import Paper from "$lib/assets/icon-paper.svg";
     import Rock from "$lib/assets/icon-rock.svg";
-    import RulesIcon from "../components/svgs/RulesIcon.svelte";
+    import RoleChip from "$lib/components/RoleChip/RoleChip.svelte";
+    import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
     import Scissors from "$lib/assets/icon-scissors.svg";
     import { score } from "../stores/score.ts";
     import Spock from "$lib/assets/icon-spock.svg";
@@ -74,7 +75,9 @@
     //         throw error;
     //     }
     // }
-    async function handlePlayerMove() {
+    /**@param {string} role */
+    async function handlePlayerMove(role) {
+        playerMove = role;
         setTimeout(async () => {
             computerMove = Object.keys(roles)[Math.floor(Math.random() * 5)];
             if (computerMove === playerMove) {
@@ -132,22 +135,14 @@
                 <ul class="roles-list game_board__roles-list">
                     {#each Object.entries(roles) as [role, {imageUrl, shadowColor, linearGradient}], i (i)}
                         <li class="role roles-list__item">
-                            <button
-                                    class="role-chip"
-                                    style="background: {linearGradient}; box-shadow: 0 4px 0 {shadowColor}"
-                                    on:click={() => {
-                                        playerMove = role;
-                                        handlePlayerMove()
-                                    }}
-                            >
-                                <span class="role-chip__image-wrapper">
-                                     <img
-                                             class="role-chip__icon"
-                                             src={imageUrl}
-                                             alt={role}
-                                     />
-                                </span>
-                            </button>
+                           <RoleChip
+                                   role={role}
+                                   imageUrl={imageUrl}
+                                   shadowColor={shadowColor}
+                                   linearGradient={linearGradient}
+                                   isButton={true}
+                                   on:click={() => handlePlayerMove(role)}
+                           />
                         </li>
                     {/each}
                 </ul>
@@ -155,34 +150,22 @@
                 <div class="action-container game-board__action-container">
                     <ul class="moves action-container__moves">
                         <li class="moves__item">
-                            <div
-                                    class="role-chip"
-                                    style="background: {roles[playerMove].linearGradient}; box-shadow: 0 4px 0 {roles[playerMove].shadowColor}"
-                            >
-                                <div class="role-chip__image-wrapper">
-                                    <img
-                                            class="role-chip__icon"
-                                            src={roles[playerMove].imageUrl}
-                                            alt={playerMove}
-                                    />
-                                </div>
-                            </div>
+                            <RoleChip
+                                    role={playerMove}
+                                    imageUrl={roles[playerMove].imageUrl}
+                                    shadowColor={roles[playerMove].shadowColor}
+                                    linearGradient={roles[playerMove].linearGradient}
+                            />
                             <p>You picked</p>
                         </li>
                         <li class="move moves__item">
                             {#if computerMove.length > 0}
-                                <div
-                                        class="role-chip computer-move"
-                                        style="background: {roles[computerMove].linearGradient}; box-shadow: 0 4px 0 {roles[computerMove].shadowColor}"
-                                >
-                                    <div class="role-chip__image-wrapper">
-                                        <img
-                                                class="role-chip__icon"
-                                                src={roles[computerMove].imageUrl}
-                                                alt={computerMove}
-                                        />
-                                    </div>
-                                </div>
+                                <RoleChip
+                                        role={computerMove}
+                                        imageUrl={roles[computerMove].imageUrl}
+                                        shadowColor={roles[computerMove].shadowColor}
+                                        linearGradient={roles[computerMove].linearGradient}
+                                />
                             {:else}
                                 <div class="move__empty-content">
 
@@ -402,32 +385,6 @@
         transform: translate(-50%, 0);
     }
 
-
-    .role-chip {
-        padding: 11px;
-        border-radius: 100px;
-        height: 97px;
-        width: 97px;
-        display: flex;
-        box-sizing: border-box;
-        justify-content: center;
-        align-items: center;
-    }
-    .role-chip__image-wrapper {
-        background: #fff;
-        border-radius: 100px;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-sizing: border-box;
-        box-shadow: inset 0 5px 0 rgba(96,110,133,.25);
-    }
-    .role-chip__icon {
-        max-height: 40px;
-        max-width: 42px;
-    }
     .action-container {
         display: flex;
         flex-direction: column;
