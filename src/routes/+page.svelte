@@ -1,87 +1,17 @@
 <script lang="ts">
-    import Lizard from "$lib/assets/icon-lizard.svg";
     import Logo from "$lib/assets/logo-bonus.svg";
     import Modal from "$lib/components/Modal.svelte";
     import {modal} from "../stores/modal";
-    import Paper from "$lib/assets/icon-paper.svg";
-    import Rock from "$lib/assets/icon-rock.svg";
     import RoleChip from "$lib/components/RoleChip.svelte";
+    import {roles} from "../lib/consts/roles";
     import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
-    import Scissors from "$lib/assets/icon-scissors.svg";
     import { score } from "../stores/score";
-    import Spock from "$lib/assets/icon-spock.svg";
-    type Role = {
-        imageUrl: string,
-        defeat: string[],
-        linearGradient: string,
-        shadowColor: string
-    }
-    type Roles = Record<string, Role>
-    const roles: Roles  = {
-        scissors: {
-            imageUrl: Scissors,
-            defeat:  ["paper", "lizard"],
-            linearGradient: "linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%))",
-            shadowColor: "#c96d1d"
-        },
-        spock: {
-            imageUrl: Spock,
-            defeat: ["rock", "scissors"],
-            linearGradient: "linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%))",
-            shadowColor: "#2B8CAF"
-        },
-        lizard: {
-            imageUrl: Lizard,
-            defeat: ["paper", "spock"],
-            linearGradient: "linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%))",
-            shadowColor: "#6038AB"
-        },
-        rock: {
-            imageUrl: Rock,
-            defeat: ["lizard", "scissors"],
-            linearGradient: "linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))",
-            shadowColor: "#9e152e"
-        },
-        paper: {
-            imageUrl: Paper,
-            defeat:  ["rock", "spock"],
-            linearGradient: "linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))",
-            shadowColor: "#2740be"
-        }
-    };
-    // let chatGPTResponse = "";
-    // import axios from "axios";
+
+
     let playerMove = "";
     let computerMove = "";
     let resultMessage = "";
-    // let conversationHistory = [];
 
-    // export async function getChatGPTResponse(playerMove, conversationHistory) {
-    //     try {
-    //         const response = await axios.post(
-    //             VITE_OPENAI_ENDPOINT,
-    //             {
-    //                 model: "gpt-3.5-turbo-0301",
-    //                 // prompt: `Player chose ${playerMove}. ChatGPT:`,
-    //                 max_tokens: 50,
-    //                 temperature: 0.7,
-    //                 messages: [{role: "user", content: "Say this is a test!"}]
-    //             },
-    //             {
-    //                 headers: {
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${VITE_OPENAI_API_KEY}`,
-    //                 },
-    //             }
-    //         );
-    //         console.log(response)
-    //
-    //         return response.data.choices[0].text;
-    //     } catch (error) {
-    //         console.error("Error calling OpenAI API:", error);
-    //         throw error;
-    //     }
-    // }
     const delay = (callback: () => unknown, ms: number) => {
         return new Promise((resolve) => {
             setTimeout(async () => {
@@ -104,12 +34,6 @@
                 score.set(String(actualScore))
             }
         }, 5000);
-        // // conversationHistory.push({ role: "player", content: playerMove });
-        //
-        // const chatGptResponse = await getChatGPTResponse(playerMove, conversationHistory);
-        // conversationHistory.push({ role: "chatGPT", content: chatGptResponse });
-        // console.log(conversationHistory);
-        // Update UI or game logic with the chatGptResponse
     }
     const handlePlayAgainButton = () => {
         computerMove = "";
@@ -250,10 +174,6 @@
     }
     
     .rules-checkbox {
-        /*position: absolute;*/
-        /*bottom: 55px;*/
-        /*right: 50%;*/
-        /*transform: translate(50%, 0);*/
         font-size: 16px;
         padding: 15px 38px 12px 38px;
         border: 2px solid var(--border-color);
