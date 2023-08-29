@@ -3,13 +3,13 @@ import Paper from "$lib/assets/icon-paper.svg";
 import Rock from "$lib/assets/icon-rock.svg";
 import Scissors from "$lib/assets/icon-scissors.svg";
 import Spock from "$lib/assets/icon-spock.svg";
-type Role = {
+export type Role = {
     imageUrl: string,
     defeat: string[],
     linearGradient: string,
     shadowColor: string
 }
-type Roles = Record<string, Role>;
+export type Roles = Record<string, Role>;
 export const roles: Roles  = {
     scissors: {
         imageUrl: Scissors,

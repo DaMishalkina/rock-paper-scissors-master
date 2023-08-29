@@ -4,6 +4,7 @@
     import {modal} from "../stores/modal";
     import RoleChip from "$lib/components/RoleChip.svelte";
     import {roles} from "../lib/consts/roles";
+    import RolesList from "../lib/components/RolesList/RolesList.svelte";
     import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
     import { score } from "../stores/score";
 
@@ -19,8 +20,8 @@
             }, ms)
         })
     }
-    async function handlePlayerMove(role: string) {
-        playerMove = role;
+    async function handlePlayerMove(event: CustomEvent) {
+        playerMove = event.detail;
         await delay(() => {
             computerMove = Object.keys(roles)[Math.floor(Math.random() * 5)];
             if (computerMove === playerMove) {
@@ -60,20 +61,7 @@
         {/if}
         <section class="game-board main__game-board">
             {#if playerMove.length === 0}
-                <ul class="roles-list game_board__roles-list">
-                    {#each Object.entries(roles) as [role, {imageUrl, shadowColor, linearGradient}], i (i)}
-                        <li class="role roles-list__item">
-                           <RoleChip
-                                   role={role}
-                                   imageUrl={imageUrl}
-                                   shadowColor={shadowColor}
-                                   linearGradient={linearGradient}
-                                   isButton={true}
-                                   on:click={() => handlePlayerMove(role)}
-                           />
-                        </li>
-                    {/each}
-                </ul>
+                <RolesList roles={roles} on:chipClick={handlePlayerMove} />
             {:else}
                 <div class="action-container game-board__action-container">
                     <ul class="moves action-container__moves">
@@ -239,44 +227,6 @@
         display: flex;
         justify-content: center;
         flex: 1;
-    }
-    .roles-list {
-        background-image: url("../lib/assets/bg-pentagon.svg");
-        background-repeat: no-repeat;
-        background-size: 209px 215px;
-        background-position: center;
-        height: 310px;
-        width: 310px;
-        position: relative;
-        align-self: center;
-    }
-    .role {
-        position: absolute;
-    }
-    .role:nth-child(1) {
-        top: 0;
-        left: 50%;
-        transform: translate(-50%, 0);
-    }
-    .role:nth-child(2) {
-        top: 50%;
-        left: 0;
-        transform: translate(0, -75%);
-    }
-    .role:nth-child(3) {
-        top: 50%;
-        right: 0;
-        transform: translate(0, -75%);
-    }
-    .role:nth-child(4) {
-        bottom: 0;
-        left: 0;
-        transform: translate(50%, 0);
-    }
-    .role:nth-child(5) {
-        bottom: 0;
-        right: 0;
-        transform: translate(-50%, 0);
     }
 
     .action-container {
