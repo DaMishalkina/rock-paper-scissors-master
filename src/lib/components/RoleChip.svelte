@@ -1,5 +1,5 @@
-<script>
-    export let role, imageUrl, shadowColor, linearGradient, isButton = false;
+<script lang="ts">
+    export let role: string, imageUrl: string, shadowColor: string, linearGradient: string, isButton = false;
 </script>
 
 {#if isButton}

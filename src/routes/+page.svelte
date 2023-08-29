@@ -1,41 +1,48 @@
-<script>
-    import CloseIcon from "../lib/components/svgs/CloseIcon.svelte";
+<script lang="ts">
     import Lizard from "$lib/assets/icon-lizard.svg";
-    import Logo from "$lib/assets/logo-bonus.svg"
+    import Logo from "$lib/assets/logo-bonus.svg";
+    import Modal from "$lib/components/Modal.svelte";
+    import {modal} from "../stores/modal";
     import Paper from "$lib/assets/icon-paper.svg";
     import Rock from "$lib/assets/icon-rock.svg";
-    import RoleChip from "$lib/components/RoleChip/RoleChip.svelte";
+    import RoleChip from "$lib/components/RoleChip.svelte";
     import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
     import Scissors from "$lib/assets/icon-scissors.svg";
-    import { score } from "../stores/score.ts";
+    import { score } from "../stores/score";
     import Spock from "$lib/assets/icon-spock.svg";
-    let areRulesOpened = false;
-    const roles = {
-        "scissors": {
+    type Role = {
+        imageUrl: string,
+        defeat: string[],
+        linearGradient: string,
+        shadowColor: string
+    }
+    type Roles = Record<string, Role>
+    const roles: Roles  = {
+        scissors: {
             imageUrl: Scissors,
             defeat:  ["paper", "lizard"],
             linearGradient: "linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%))",
             shadowColor: "#c96d1d"
         },
-        "spock": {
+        spock: {
             imageUrl: Spock,
             defeat: ["rock", "scissors"],
             linearGradient: "linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%))",
             shadowColor: "#2B8CAF"
         },
-        "lizard": {
+        lizard: {
             imageUrl: Lizard,
             defeat: ["paper", "spock"],
             linearGradient: "linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%))",
             shadowColor: "#6038AB"
         },
-        "rock": {
+        rock: {
             imageUrl: Rock,
             defeat: ["lizard", "scissors"],
             linearGradient: "linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))",
             shadowColor: "#9e152e"
         },
-        "paper": {
+        paper: {
             imageUrl: Paper,
             defeat:  ["rock", "spock"],
             linearGradient: "linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))",
@@ -75,10 +82,16 @@
     //         throw error;
     //     }
     // }
-    /**@param {string} role */
-    async function handlePlayerMove(role) {
+    const delay = (callback: () => unknown, ms: number) => {
+        return new Promise((resolve) => {
+            setTimeout(async () => {
+                resolve(callback())
+            }, ms)
+        })
+    }
+    async function handlePlayerMove(role: string) {
         playerMove = role;
-        setTimeout(async () => {
+        await delay(() => {
             computerMove = Object.keys(roles)[Math.floor(Math.random() * 5)];
             if (computerMove === playerMove) {
                 resultMessage = "Draw";
@@ -91,7 +104,7 @@
                 score.set(String(actualScore))
             }
         }, 5000);
-        // conversationHistory.push({ role: "player", content: playerMove });
+        // // conversationHistory.push({ role: "player", content: playerMove });
         //
         // const chatGptResponse = await getChatGPTResponse(playerMove, conversationHistory);
         // conversationHistory.push({ role: "chatGPT", content: chatGptResponse });
@@ -115,20 +128,11 @@
         </div>
     </header>
     <main class="main">
-        {#if areRulesOpened}
-            <section class="modal__wrapper">
-                <div class="modal__container">
-                    <h2>Rules</h2>
-                    <RulesIcon />
-                    <button
-                            class="close-button modal__close-button"
-                            on:click={() => areRulesOpened = false}
-                    >
-                        <span class="visually-hidden-title">Close Rules</span>
-                        <CloseIcon />
-                    </button>
-                </div>
-            </section>
+        {#if $modal.open === true}
+            <Modal>
+                <h2>Rules</h2>
+                <RulesIcon />
+            </Modal>
         {/if}
         <section class="game-board main__game-board">
             {#if playerMove.length === 0}
@@ -190,9 +194,9 @@
     <label class="rules-checkbox">
         <input
                 class="rules-checkbox__input"
-                on:change|preventDefault={() => areRulesOpened = !areRulesOpened}
+                on:change|preventDefault={() => $modal.open = true}
                 type="checkbox"
-                checked={areRulesOpened}
+                checked={$modal.open}
         />
         rules
     </label>
@@ -263,31 +267,7 @@
         width: 0;
         visibility: hidden;
     }
-    .modal__wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 75%);
-        z-index: 100;
-    }
-    .modal__container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        height: 100dvh;
-        background: #fff;
-        color: var(--dark-text-color);
-        /*position: absolute;*/
-        /*top: 50%;*/
-        /*left: 50%;*/
-        /*transform:  translate(-50%, -50%);*/
-        /*width: fit-content;*/
-        /*height: fit-content;*/
-    }
-    .visually-hidden-title:not(:focus):not(:active) {
+    :global(.visually-hidden-title:not(:focus):not(:active)) {
         clip: rect(0 0 0 0);
         clip-path: inset(100%);
         height: 1px;
@@ -296,13 +276,7 @@
         white-space: nowrap;
         width: 1px;
     }
-    .close-button {
-        display: flex;
-    }
-    .close-button :global(svg) {
-        width: 20px;
-        height: 20px;
-    }
+
     .header {
         border: 2px solid var(--border-color);
         border-radius: 5px;
