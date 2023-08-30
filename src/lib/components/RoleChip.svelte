@@ -1,10 +1,20 @@
 <script lang="ts">
-    export let role: string, imageUrl: string, shadowColor: string, linearGradient: string, isButton = false;
+    export let
+        role: string,
+        imageUrl: string,
+        shadowColor: string,
+        linearGradient: string,
+        isLarge = false,
+        isButton = false,
+        isActive = false;
+    console.log(isLarge)
 </script>
 
 {#if isButton}
     <button
             class="role-chip--button role-chip"
+            class:role-chip--active={isActive}
+            class:role-chip--large={isLarge}
             style="
             --background-color: {linearGradient};
             --shadow-color: {shadowColor}"
@@ -21,6 +31,8 @@
 {:else}
     <div
             class="role-chip"
+            class:role-chip--active={isActive}
+            class:role-chip--large={isLarge}
             style="
             --background-color: {linearGradient};
             --shadow-color: {shadowColor}"
@@ -52,6 +64,11 @@
         align-items: center;
         background: var(--background-color);
         box-shadow: 0 4px 0 var(--shadow-color);
+    }
+    .role-chip--large {
+        height: 133px;
+        width: 133px;
+        padding: 16px;
     }
     .role-chip--button::after {
         content: "";
@@ -92,5 +109,53 @@
     .role-chip__icon {
         max-height: 40px;
         max-width: 42px;
+    }
+    .role-chip--large .role-chip__icon {
+        max-height: 45px;
+        max-width: 53px;
+    }
+    .role-chip--active {
+        position: relative;box-shadow: 0 0 0 0 rgba(54, 96, 150, 0.5);
+        animation: pulse 1.5s infinite;
+    }
+    @media (min-width: 1200px) {
+        .role-chip {
+            width: 148px;
+            height: 148px;
+            padding: 18px;
+        }
+        .role-chip__icon {
+            max-height: 52px;
+            max-width: 57px;
+        }
+        .role-chip--large {
+            width: 300px;
+            height: 300px;
+            border-radius: 300px;
+            padding: 34px;
+        }
+        .role-chip--large .role-chip__image-wrapper {
+            border-radius: 300px;
+        }
+        .role-chip--large .role-chip__icon {
+            height: 120px;
+            width: auto;
+            max-height: 120px;
+            max-width: 116px;
+        }
+
+    }
+    @keyframes pulse {
+        0% {
+            transform: scale(0.9);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 50px rgba(54, 96, 150, 0);
+        }
+        100% {
+            transform: scale(0.9);
+            box-shadow: 0 0 0 0 rgba(54, 96, 150, 0);
+        }
     }
 </style>

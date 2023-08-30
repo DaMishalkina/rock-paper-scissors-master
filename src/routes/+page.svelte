@@ -12,6 +12,7 @@
     let playerMove = "";
     let computerMove = "";
     let resultMessage = "";
+    let winnerMove = "";
 
     const delay = (callback: () => unknown, ms: number) => {
         return new Promise((resolve) => {
@@ -28,8 +29,10 @@
                 resultMessage = "Draw";
             }
             else if (roles[computerMove].defeat.indexOf(playerMove) > -1){
+                winnerMove = computerMove;
                 resultMessage = "You lose";
             } else  {
+                winnerMove = playerMove;
                 resultMessage = "You win";
                 const actualScore = Number($score) + 1;
                 score.set(String(actualScore))
@@ -40,22 +43,23 @@
         computerMove = "";
         playerMove = "";
         resultMessage = "";
+        winnerMove = "";
     }
 
 </script>
 
 <div class="content-container">
-    <header class="header">
+    <header class="header content-container__header">
         <img class="header__logo" src={Logo} alt="Rock Paper Scissors Lizard Spock" />
         <div class="score-container header__score-container">
             <p class="score-container__title">Score</p>
             <p class="score-container__value">{$score}</p>
         </div>
     </header>
-    <main class="main">
+    <main class="main content-container__main">
         {#if $modal.open === true}
             <Modal>
-                <h2>Rules</h2>
+                <h2 class="main__modal-title">Rules</h2>
                 <RulesIcon />
             </Modal>
         {/if}
@@ -64,23 +68,34 @@
                 <RolesList roles={roles} on:chipClick={handlePlayerMove} />
             {:else}
                 <div class="action-container game-board__action-container">
-                    <ul class="moves action-container__moves">
-                        <li class="moves__item">
+                    <ul
+                            class="action-items action-container__items"
+                            class:action-items--defined-moves={resultMessage.length > 0}
+                    >
+                        <li
+                                class="move action-item"
+                        >
                             <RoleChip
                                     role={playerMove}
                                     imageUrl={roles[playerMove].imageUrl}
                                     shadowColor={roles[playerMove].shadowColor}
                                     linearGradient={roles[playerMove].linearGradient}
+                                    isActive={playerMove === winnerMove}
+                                    isLarge={true}
                             />
                             <p>You picked</p>
                         </li>
-                        <li class="move moves__item">
+                        <li
+                                class="move action-item"
+                        >
                             {#if computerMove.length > 0}
                                 <RoleChip
+                                        isActive={computerMove === winnerMove}
                                         role={computerMove}
                                         imageUrl={roles[computerMove].imageUrl}
                                         shadowColor={roles[computerMove].shadowColor}
                                         linearGradient={roles[computerMove].linearGradient}
+                                        isLarge={true}
                                 />
                             {:else}
                                 <div class="move__empty-content">
@@ -89,21 +104,30 @@
                             {/if}
                             <p>The house picked</p>
                         </li>
+                        <li
+                                class="float-content action-item"
+                                class:float-content--hidden={resultMessage.length === 0}
+                        >
+                            <p class="float-content__message">{resultMessage}</p>
+                            <button
+                                    class="float-content__button"
+                                    on:click={() => handlePlayAgainButton()}>Play again</button>
+                        </li>
                     </ul>
-                    <div
-                            class="action-container__float-content"
-                            class:hidden={resultMessage.length === 0}
-                    >
-                        <p class="action-container__message">{resultMessage}</p>
-                        <button
-                                class="action-container__button"
-                                on:click={() => handlePlayAgainButton()}>Play again</button>
-                    </div>
+<!--                    <div-->
+<!--                            class="float-content action-container__float-content"-->
+<!--                            class:float-content&#45;&#45;hidden={resultMessage.length === 0}-->
+<!--                    >-->
+<!--                        <p class="action-container__message">{resultMessage}</p>-->
+<!--                        <button-->
+<!--                                class="action-container__button"-->
+<!--                                on:click={() => handlePlayAgainButton()}>Play again</button>-->
+<!--                    </div>-->
                 </div>
             {/if}
         </section>
     </main>
-    <label class="rules-checkbox">
+    <label class="rules-checkbox content-container__modal-checkbox">
         <input
                 class="rules-checkbox__input"
                 on:change|preventDefault={() => $modal.open = true}
@@ -128,7 +152,7 @@
     }
     :global(body) {
         font-family: "Barlow Semi Condensed", sans-serif;
-        background: linear-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
+        background: radial-gradient(circle at 54% 0%, rgba(31, 55, 86, 1) 10%, rgba(20, 21, 57, 1) 100%);
         height: 100dvh;
         overflow: hidden;
         color: var(--text-color);
@@ -153,6 +177,15 @@
         margin: 0;
         list-style: none;
     }
+    :global(.visually-hidden-title:not(:focus):not(:active)) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(100%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
     .content-container {
         padding: 30px;
         display: flex;
@@ -160,7 +193,113 @@
         justify-content: space-between;
         height: 100dvh;
     }
-    
+    .header {
+        width: 100%;
+        max-width: 704px;
+        margin: 0 auto;
+    }
+    .header {
+        border: 2px solid var(--border-color);
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 10px 10px 22px;
+        flex-shrink: 0;
+    }
+    .header__logo {
+        width: 48px;
+        height: 48px;
+    }
+    .score-container {
+        height: 100%;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 14px 24px;
+        border-radius: 4px;
+
+    }
+    .score-container__title {
+        font-size: 14px;
+        color: var(--score-text-color);
+    }
+    .score-container__value {
+        font-size: 28px;
+        color: var(--dark-text-color);
+    }
+    .main {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .game-board {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .action-container {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        justify-content: space-around;
+    }
+    .action-items {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 704px;
+        width: 100%;
+        margin: 0 auto;
+        flex-flow: wrap;
+        row-gap: 10%;
+    }
+    .action-items--defined-moves {
+        max-width: 940px;
+    }
+    .move {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 28px;
+    }
+    .move__empty-content {
+        height: 97px;
+        width: 97px;
+        border-radius: 100px;
+        background: #1A2946;
+        box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
+    }
+    .float-content--hidden {
+        visibility: hidden;
+    }
+    .float-content {
+        display: flex;
+        flex-direction: column;
+        gap: 27px;
+        justify-content: center;
+        align-items: center;
+        flex-basis: 100%
+    }
+    .float-content__message {
+        font-size: 40px;
+        font-weight: 700;
+    }
+    .float-content__button {
+        background: #fff;
+        border-radius: 6px;
+        color: var(--dark-text-color);
+        font-size: 16px;
+        padding: 20px 60px 17px 60px;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        font-weight: 600;
+    }
+    .main__modal-title {
+        margin-bottom: 20px;
+    }
     .rules-checkbox {
         font-size: 16px;
         padding: 15px 38px 12px 38px;
@@ -175,103 +314,45 @@
         width: 0;
         visibility: hidden;
     }
-    :global(.visually-hidden-title:not(:focus):not(:active)) {
-        clip: rect(0 0 0 0);
-        clip-path: inset(100%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
-    }
-
-    .header {
-        border: 2px solid var(--border-color);
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 10px 10px 22px;
-    }
-    .header__logo {
-        width: 48px;
-        height: 48px;
-    }
-    .header__score-container {
-        background: #fff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 14px 24px;
-        border-radius: 4px;
-
-    }
-    .score-container__title {
-        font-size: 14px;
-        color: var(--score-text-color);
-    }
-    .score-container__value {
-        font-size: 32px;
-        color: var(--dark-text-color);
-    }
-    .hidden {
-        visibility: hidden;
-    }
-    .main {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-
-    .game-board {
-        display: flex;
-        justify-content: center;
-        flex: 1;
-    }
-
-    .action-container {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        justify-content: space-around;
-    }
-    .moves {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .moves__item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 28px;
-    }
-    .move__empty-content {
-        height: 97px;
-        width: 97px;
-        border-radius: 100px;
-        background: #1A2946;
-        box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
-    }
-    .action-container__float-content {
-        display: flex;
-        flex-direction: column;
-        gap: 27px;
-        justify-content: center;
-        align-items: center;
-    }
-    .action-container__message {
-        font-size: 40px;
-        font-weight: 700;
-    }
-    .action-container__button {
-        background: #fff;
-        border-radius: 6px;
-        color: var(--dark-text-color);
-        font-size: 16px;
-        padding: 20px 60px 17px 60px;
-        text-transform: uppercase;
-        letter-spacing: 0.25em;
-        font-weight: 600;
+    @media (min-width: 1200px) {
+        .content-container {
+            padding: 46px 30px 30px;
+        }
+        .rules-checkbox {
+            align-self: flex-end;
+        }
+        .header {
+            padding: 18px 18px 18px 30px;
+        }
+        .header__logo {
+            height: 108px;
+            width: auto;
+        }
+        .score-container {
+            padding: 20px 50px;
+        }
+        .score-container__title {
+            font-size: 16px;
+        }
+        .score-container__value {
+            font-size: 45px;
+        }
+        .move__empty-content {
+            width: 222px;
+            height: 222px;
+        }
+        .action-item:nth-child(1) {
+            order: 1;
+        }
+        .action-item:nth-child(2) {
+            order: 3;
+        }
+        .action-item:nth-child(3) {
+            flex-basis: 0;
+            order: 2;
+        }
+        .move {
+            flex-direction: column-reverse;
+        }
     }
 </style>

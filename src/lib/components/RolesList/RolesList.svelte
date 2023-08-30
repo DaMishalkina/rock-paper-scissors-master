@@ -29,4 +29,11 @@
         position: relative;
         align-self: center;
     }
+    @media (min-width: 1200px) {
+        .roles-list {
+            height: 470px;
+            width: 470px;
+            background-size: 315px 322px;
+        }
+    }
 </style>

@@ -41,6 +41,8 @@
         height: 100dvh;
         background: #fff;
         color: var(--dark-text-color);
+        padding: 32px;
+        box-sizing: border-box;
     }
     .close-button {
         display: flex;
@@ -49,7 +51,7 @@
         width: 20px;
         height: 20px;
     }
-    @media (min-width: 1024px) {
+    @media (min-width: 1200px) {
         .modal__container {
             position: absolute;
             top: 50%;
@@ -57,6 +59,14 @@
             transform:  translate(-50%, -50%);
             width: fit-content;
             height: fit-content;
+            padding: 55px 32px 62px;
+            border-radius: 5px;
+            align-items: flex-start;
+        }
+        .close-button {
+            position: absolute;
+            top: 55px;
+            right: 32px;
         }
 
     }
