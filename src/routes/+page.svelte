@@ -37,7 +37,7 @@
                 const actualScore = Number($score) + 1;
                 score.set(String(actualScore))
             }
-        }, 5000);
+        }, 3000);
     }
     const handlePlayAgainButton = () => {
         computerMove = "";
@@ -99,7 +99,7 @@
                                 />
                             {:else}
                                 <div class="move__empty-content">
-
+                                    <div></div>
                                 </div>
                             {/if}
                             <p>The house picked</p>
@@ -114,15 +114,6 @@
                                     on:click={() => handlePlayAgainButton()}>Play again</button>
                         </li>
                     </ul>
-<!--                    <div-->
-<!--                            class="float-content action-container__float-content"-->
-<!--                            class:float-content&#45;&#45;hidden={resultMessage.length === 0}-->
-<!--                    >-->
-<!--                        <p class="action-container__message">{resultMessage}</p>-->
-<!--                        <button-->
-<!--                                class="action-container__button"-->
-<!--                                on:click={() => handlePlayAgainButton()}>Play again</button>-->
-<!--                    </div>-->
                 </div>
             {/if}
         </section>
@@ -256,16 +247,20 @@
         flex-flow: wrap;
         row-gap: 10%;
     }
-    .action-items--defined-moves {
-        max-width: 940px;
-    }
     .move {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: space-between;
         gap: 28px;
     }
     .move__empty-content {
+        display: flex;
+        align-items: center;
+        height: 133px;
+    }
+    .move__empty-content :global(div) {
+        display: flex;
         height: 97px;
         width: 97px;
         border-radius: 100px;
@@ -274,6 +269,7 @@
     }
     .float-content--hidden {
         visibility: hidden;
+        opacity: 0;
     }
     .float-content {
         display: flex;
@@ -281,7 +277,8 @@
         gap: 27px;
         justify-content: center;
         align-items: center;
-        flex-basis: 100%
+        flex-basis: 100%;
+        transition: opacity 3s ease-in;
     }
     .float-content__message {
         font-size: 40px;
@@ -337,9 +334,21 @@
         .score-container__value {
             font-size: 45px;
         }
+        .move {
+            height: 100%;
+        }
         .move__empty-content {
+            height: fit-content;
+            flex: 1;
+        }
+        .move__empty-content :global(div) {
             width: 222px;
             height: 222px;
+            border-radius: 222px;
+            flex: 1;
+        }
+        .action-items--defined-moves {
+            max-width: 940px;
         }
         .action-item:nth-child(1) {
             order: 1;
@@ -350,9 +359,11 @@
         .action-item:nth-child(3) {
             flex-basis: 0;
             order: 2;
+            flex-grow: 1;
         }
         .move {
             flex-direction: column-reverse;
+            gap: 68px;
         }
     }
 </style>

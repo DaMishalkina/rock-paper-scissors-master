@@ -7,7 +7,6 @@
         isLarge = false,
         isButton = false,
         isActive = false;
-    console.log(isLarge)
 </script>
 
 {#if isButton}
