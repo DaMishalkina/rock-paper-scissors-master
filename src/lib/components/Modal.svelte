@@ -51,6 +51,12 @@
         width: 20px;
         height: 20px;
     }
+    .close-button:hover {
+        transform: translateY(-3px);
+    }
+    .close-button:active {
+        transform: translateY(-1px);
+    }
     @media (min-width: 1200px) {
         .modal__container {
             position: absolute;

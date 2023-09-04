@@ -129,6 +129,12 @@
                 bind:checked={$modal.open}
         />
         <span>rules</span>
+        {#each [...Array(4).keys()] as i (i)}
+            <span
+                    class="rules-checkbox__hovered-span"
+                    style="--n: {i + 1}"
+            ></span>
+        {/each}
     </label>
 </div>
 
@@ -308,7 +314,33 @@
         cursor: pointer;
         letter-spacing: 0.25em;
         align-self: center;
+        position: relative;
+        overflow: hidden;
     }
+
+    .rules-checkbox .rules-checkbox__hovered-span {
+        position: absolute;
+        width: 25%;
+        height: 100%;
+        background-color: var(--border-color);
+        transform: translateY(150%);
+        border-radius: 50%;
+        left: calc((var(--n) - 1) * 25%);
+        transition: 0.5s;
+        transition-delay: calc((var(--n) - 1) * 0.1s);
+        z-index: -1;
+    }
+    .rules-checkbox:hover {
+        transform: translateY(-3px);
+    }
+
+    .rules-checkbox:hover .rules-checkbox__hovered-span{
+        transform: translateY(0) scale(2);
+    }
+    .rules-checkbox:active {
+        transform: translateY(-1px);
+    }
+
     .rules-checkbox__input {
         height: 0;
         width: 0;
