@@ -1,11 +1,10 @@
-<script>
+<script lang="ts">
     import { computePosition,  flip, shift, offset } from "@floating-ui/dom";
-    export let side = "top";
-    let tooltipWrapper;
-    let tooltipDropdown;
+    let tooltipWrapper: HTMLElement;
+    let tooltipDropdown: HTMLElement;
     const handleTooltipHover = () => {
         computePosition(tooltipWrapper, tooltipDropdown, {
-            placement: side,
+            placement: "top",
             middleware: [offset(6), flip(), shift({padding: 5})],
         }).then(({x, y}) => {
             Object.assign(tooltipDropdown.style, {
