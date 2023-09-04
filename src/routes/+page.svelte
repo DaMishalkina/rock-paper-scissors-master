@@ -4,7 +4,7 @@
     import {modal} from "../stores/modal";
     import RoleChip from "$lib/components/RoleChip.svelte";
     import {roles} from "../lib/consts/roles";
-    import RolesList from "../lib/components/RolesList/RolesList.svelte";
+    import RolesList from "../lib/features/RolesList/RolesList.svelte";
     import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
     import { score } from "../stores/score";
 
@@ -123,9 +123,9 @@
                 class="rules-checkbox__input"
                 on:change|preventDefault={() => $modal.open = true}
                 type="checkbox"
-                checked={$modal.open}
+                bind:checked={$modal.open}
         />
-        rules
+        <span>rules</span>
     </label>
 </div>
 

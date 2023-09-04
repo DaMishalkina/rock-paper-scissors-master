@@ -2,11 +2,15 @@
     export let
         role: string,
         imageUrl: string,
-        shadowColor: string,
+        // rgb
+        shadowColor = "",
         linearGradient: string,
         isLarge = false,
         isButton = false,
         isActive = false;
+
+    const shadowColorWithoutRGB = shadowColor.substring(4, shadowColor.length-1)
+        .replace(/ /g, '');
 </script>
 
 {#if isButton}
@@ -16,7 +20,8 @@
             class:role-chip--large={isLarge}
             style="
             --background-color: {linearGradient};
-            --shadow-color: {shadowColor}"
+            --shadow-color: {shadowColor};
+            --shadow-color-without-rgb: {shadowColorWithoutRGB}"
             on:click
     >
         <span class="role-chip__image-wrapper">
@@ -34,7 +39,8 @@
             class:role-chip--large={isLarge}
             style="
             --background-color: {linearGradient};
-            --shadow-color: {shadowColor}"
+            --shadow-color: {shadowColor};
+            --shadow-color-without-rgb: {shadowColorWithoutRGB}"
     >
         <span class="role-chip__image-wrapper">
              <img
@@ -51,6 +57,7 @@
     :root {
         --background-color: inherit;
         --shadow-color: inherit;
+        --shadow-color-without-rgb: inherit;
     }
     .role-chip {
         padding: 11px;
@@ -86,7 +93,7 @@
         transform: translateY(-3px);
     }
     .role-chip--button:hover::after {
-        transform: scaleX(1.4) scaleY(1.6);
+        transform: scaleX(1.4) scaleY(1.4);
         box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px, rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px, rgba(0, 0, 0, 0.09) 0 -3px 5px;
         opacity: 0;
     }
@@ -114,7 +121,8 @@
         max-width: 53px;
     }
     .role-chip--active {
-        position: relative;box-shadow: 0 0 0 0 rgba(54, 96, 150, 0.5);
+        position: relative;
+        box-shadow: 0 0 0 0 rgba(var(--shadow-color-without-rgb), 0.5);
         animation: pulse 1.5s infinite;
     }
     @media (min-width: 1200px) {
@@ -150,11 +158,12 @@
         }
         70% {
             transform: scale(1);
-            box-shadow: 0 0 0 50px rgba(54, 96, 150, 0);
+            z-index: -1;
+            box-shadow: 0 0 0 80px rgba(var(--shadow-color-without-rgb), 0);
         }
         100% {
             transform: scale(0.9);
-            box-shadow: 0 0 0 0 rgba(54, 96, 150, 0);
+            box-shadow: 0 0 0 0 rgba(var(--shadow-color-without-rgb), 0);
         }
     }
 </style>
