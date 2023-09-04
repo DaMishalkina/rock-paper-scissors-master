@@ -1,11 +1,12 @@
 <script lang="ts">
+    import ButtonWrapper from "$lib/components/ButtonWrapper.svelte";
     import Logo from "$lib/assets/logo-bonus.svg";
     import Modal from "$lib/components/Modal.svelte";
     import {modal} from "../stores/modal";
     import RoleChip from "$lib/components/RoleChip.svelte";
-    import {roles} from "../lib/consts/roles";
-    import RolesList from "../lib/features/RolesList/RolesList.svelte";
-    import RulesIcon from "../lib/components/svgs/RulesIcon.svelte";
+    import {roles} from "$lib/consts/roles";
+    import RolesList from "$lib/features/RolesList/RolesList.svelte";
+    import RulesIcon from "$lib/components/svgs/RulesIcon.svelte";
     import { score } from "../stores/score";
 
 
@@ -109,9 +110,11 @@
                                 class:float-content--hidden={resultMessage.length === 0}
                         >
                             <p class="float-content__message">{resultMessage}</p>
-                            <button
-                                    class="float-content__button"
-                                    on:click={() => handlePlayAgainButton()}>Play again</button>
+                            <ButtonWrapper
+                                    className="float-content__button"
+                                    on:click={() => handlePlayAgainButton()}>
+                                Play again
+                            </ButtonWrapper>
                         </li>
                     </ul>
                 </div>
@@ -284,7 +287,7 @@
         font-size: 40px;
         font-weight: 700;
     }
-    .float-content__button {
+    :global(.float-content__button) {
         background: #fff;
         border-radius: 6px;
         color: var(--dark-text-color);

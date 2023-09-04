@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ButtonWrapper from "./ButtonWrapper.svelte";
     export let
         role: string,
         imageUrl: string,
@@ -14,14 +15,10 @@
 </script>
 
 {#if isButton}
-    <button
-            class="role-chip--button role-chip"
-            class:role-chip--active={isActive}
-            class:role-chip--large={isLarge}
-            style="
-            --background-color: {linearGradient};
-            --shadow-color: {shadowColor};
-            --shadow-color-without-rgb: {shadowColorWithoutRGB}"
+    <ButtonWrapper
+            className="role-chip"
+            backgroundColor={linearGradient}
+            shadowColor={shadowColor}
             on:click
     >
         <span class="role-chip__image-wrapper">
@@ -31,7 +28,7 @@
                      alt={role}
              />
         </span>
-    </button>
+    </ButtonWrapper>
 {:else}
     <div
             class="role-chip"
@@ -59,7 +56,7 @@
         --shadow-color: inherit;
         --shadow-color-without-rgb: inherit;
     }
-    .role-chip {
+    :global(.role-chip) {
         padding: 11px;
         border-radius: 100px;
         height: 97px;
@@ -75,31 +72,6 @@
         height: 133px;
         width: 133px;
         padding: 16px;
-    }
-    .role-chip--button::after {
-        content: "";
-        display: inline-block;
-        height: 100%;
-        width: 100%;
-        border-radius: 100px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-        transition: all .4s;
-        background: var(--background-color);
-    }
-    .role-chip--button:hover {
-        transform: translateY(-3px);
-    }
-    .role-chip--button:hover::after {
-        transform: scaleX(1.4) scaleY(1.4);
-        box-shadow: rgba(0, 0, 0, 0.25) 0 54px 55px, rgba(0, 0, 0, 0.12) 0 -12px 30px, rgba(0, 0, 0, 0.12) 0 4px 6px, rgba(0, 0, 0, 0.17) 0 12px 13px, rgba(0, 0, 0, 0.09) 0 -3px 5px;
-        opacity: 0;
-    }
-    .role-chip--button:active {
-        transform: translateY(-1px);
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     }
     .role-chip__image-wrapper {
         background: #fff;
@@ -126,7 +98,7 @@
         animation: pulse 1.5s infinite;
     }
     @media (min-width: 1200px) {
-        .role-chip {
+        :global(.role-chip) {
             width: 148px;
             height: 148px;
             padding: 18px;
