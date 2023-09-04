@@ -8,6 +8,7 @@
     import RolesList from "$lib/features/RolesList/RolesList.svelte";
     import RulesIcon from "$lib/components/svgs/RulesIcon.svelte";
     import { score } from "../stores/score";
+    import Tooltip from "$lib/components/Tooltip.svelte";
 
 
     let playerMove = "";
@@ -76,28 +77,40 @@
                         <li
                                 class="move action-item"
                         >
-                            <RoleChip
-                                    role={playerMove}
-                                    imageUrl={roles[playerMove].imageUrl}
-                                    shadowColor={roles[playerMove].shadowColor}
-                                    linearGradient={roles[playerMove].linearGradient}
-                                    isActive={playerMove === winnerMove}
-                                    isLarge={true}
-                            />
+                            <div>
+                                <Tooltip>
+                                    <RoleChip
+                                            role={playerMove}
+                                            imageUrl={roles[playerMove].imageUrl}
+                                            shadowColor={roles[playerMove].shadowColor}
+                                            linearGradient={roles[playerMove].linearGradient}
+                                            isActive={playerMove === winnerMove}
+                                            isLarge={true}
+                                    />
+                                    <span slot="tooltip__content">
+                                        {playerMove}
+                                    </span>
+                                </Tooltip>
+                            </div>
                             <p>You picked</p>
                         </li>
                         <li
                                 class="move action-item"
                         >
                             {#if computerMove.length > 0}
-                                <RoleChip
-                                        isActive={computerMove === winnerMove}
-                                        role={computerMove}
-                                        imageUrl={roles[computerMove].imageUrl}
-                                        shadowColor={roles[computerMove].shadowColor}
-                                        linearGradient={roles[computerMove].linearGradient}
-                                        isLarge={true}
-                                />
+                                <div>
+                                    <Tooltip>
+                                        <RoleChip
+                                                isActive={computerMove === winnerMove}
+                                                role={computerMove}
+                                                imageUrl={roles[computerMove].imageUrl}
+                                                shadowColor={roles[computerMove].shadowColor}
+                                                linearGradient={roles[computerMove].linearGradient}
+                                                isLarge={true}
+                                        />
+                                        <span slot="tooltip__content">{computerMove}</span>
+                                    </Tooltip>
+                                </div>
                             {:else}
                                 <div class="move__empty-content">
                                     <div></div>
@@ -371,6 +384,8 @@
         }
         .move {
             height: 100%;
+            flex-direction: column-reverse;
+            gap: 68px;
         }
         .move__empty-content {
             height: fit-content;
@@ -395,10 +410,6 @@
             flex-basis: 0;
             order: 2;
             flex-grow: 1;
-        }
-        .move {
-            flex-direction: column-reverse;
-            gap: 68px;
         }
     }
 </style>

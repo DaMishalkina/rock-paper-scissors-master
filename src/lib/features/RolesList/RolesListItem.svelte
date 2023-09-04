@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import type {Role} from "../../consts/roles";
     import RoleChip from "$lib/components/RoleChip.svelte";
+    import Tooltip from "$lib/components/Tooltip.svelte";
 
     export let roleName: string, roleValues: Role;
     let {imageUrl, shadowColor, linearGradient} = roleValues;
@@ -13,20 +14,24 @@
 </script>
 
 <li class="role roles-list__item">
-    <RoleChip
-            role={roleName}
-            imageUrl={imageUrl}
-            shadowColor={shadowColor}
-            linearGradient={linearGradient}
-            isButton={true}
-            on:click={() => handleChipClick(roleName)}
-    />
+    <Tooltip>
+        <RoleChip
+                role={roleName}
+                imageUrl={imageUrl}
+                shadowColor={shadowColor}
+                linearGradient={linearGradient}
+                isButton={true}
+                on:click={() => handleChipClick(roleName)}
+        />
+        <span slot="tooltip__content">{roleName}</span>
+    </Tooltip>
 </li>
 
 
 <style>
     .role {
         position: absolute;
+        pointer-events: auto;
     }
     .role:nth-child(1) {
         top: 0;
