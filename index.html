@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="./favicon.png" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,400;0,600;1,600&display=swap" rel="stylesheet">
+		<title>Rock Paper Scissors Master</title>
+		
+		<link href="./_app/immutable/assets/2.90bc663a.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.1281a01d.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.8b160b85.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/singletons.1b2ed93e.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.009404f9.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.dce7acf0.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.6259073d.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.0399cab9.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/2.0a4e425c.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">  <div class="content-container svelte-1irivyb"><header class="header content-container__header svelte-1irivyb"><img class="header__logo svelte-1irivyb" src="/rock-paper-scissors-master/_app/immutable/assets/logo-bonus.97065621.svg" alt="Rock Paper Scissors Lizard Spock"> <div class="score-container header__score-container svelte-1irivyb"><p class="score-container__title svelte-1irivyb" data-svelte-h="svelte-iee5ij">Score</p> <p class="score-container__value svelte-1irivyb">0</p></div></header> <main class="main content-container__main svelte-1irivyb"> <section class="game-board main__game-board svelte-1irivyb"><ul class="roles-list svelte-19weyw4"><li class="role roles-list__item svelte-1kf7cle"><div class="tooltip__wrapper svelte-1265ujv" role="tooltip"><div class="tooltip__dropdown svelte-1265ujv"><span slot="tooltip__content">scissors</span></div> <button class="button role-chip svelte-b6kysz" style="--background-color: linear-gradient(hsl(39, 89%, 49%), hsl(40, 84%, 53%)); --shadow-color: rgb(201, 109, 29);"><span class="role-chip__image-wrapper svelte-1xm2h22"><img class="role-chip__icon svelte-1xm2h22" src="/rock-paper-scissors-master/_app/immutable/assets/icon-scissors.f778df73.svg" alt="scissors"></span> </button> </div> </li><li class="role roles-list__item svelte-1kf7cle"><div class="tooltip__wrapper svelte-1265ujv" role="tooltip"><div class="tooltip__dropdown svelte-1265ujv"><span slot="tooltip__content">spock</span></div> <button class="button role-chip svelte-b6kysz" style="--background-color: linear-gradient(hsl(189, 59%, 53%), hsl(189, 58%, 57%)); --shadow-color: rgb(43, 140, 175);"><span class="role-chip__image-wrapper svelte-1xm2h22"><img class="role-chip__icon svelte-1xm2h22" src="/rock-paper-scissors-master/_app/immutable/assets/icon-spock.b919dc37.svg" alt="spock"></span> </button> </div> </li><li class="role roles-list__item svelte-1kf7cle"><div class="tooltip__wrapper svelte-1265ujv" role="tooltip"><div class="tooltip__dropdown svelte-1265ujv"><span slot="tooltip__content">lizard</span></div> <button class="button role-chip svelte-b6kysz" style="--background-color: linear-gradient(hsl(261, 73%, 60%), hsl(261, 72%, 63%)); --shadow-color: rgb(96, 56, 171);"><span class="role-chip__image-wrapper svelte-1xm2h22"><img class="role-chip__icon svelte-1xm2h22" src="/rock-paper-scissors-master/_app/immutable/assets/icon-lizard.3c893e5e.svg" alt="lizard"></span> </button> </div> </li><li class="role roles-list__item svelte-1kf7cle"><div class="tooltip__wrapper svelte-1265ujv" role="tooltip"><div class="tooltip__dropdown svelte-1265ujv"><span slot="tooltip__content">rock</span></div> <button class="button role-chip svelte-b6kysz" style="--background-color: linear-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%)); --shadow-color: rgb(158, 21, 46);"><span class="role-chip__image-wrapper svelte-1xm2h22"><img class="role-chip__icon svelte-1xm2h22" src="/rock-paper-scissors-master/_app/immutable/assets/icon-rock.e16feca1.svg" alt="rock"></span> </button> </div> </li><li class="role roles-list__item svelte-1kf7cle"><div class="tooltip__wrapper svelte-1265ujv" role="tooltip"><div class="tooltip__dropdown svelte-1265ujv"><span slot="tooltip__content">paper</span></div> <button class="button role-chip svelte-b6kysz" style="--background-color: linear-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%)); --shadow-color: rgb(39, 64, 190);"><span class="role-chip__image-wrapper svelte-1xm2h22"><img class="role-chip__icon svelte-1xm2h22" src="/rock-paper-scissors-master/_app/immutable/assets/icon-paper.90d57903.svg" alt="paper"></span> </button> </div> </li> </ul></section></main> <label class="rules-checkbox content-container__modal-checkbox svelte-1irivyb"><input class="rules-checkbox__input svelte-1irivyb" type="checkbox"> <span class="svelte-1irivyb" data-svelte-h="svelte-1s6yojr">rules</span> <span class="rules-checkbox__hovered-span svelte-1irivyb" style="--n: 1"></span><span class="rules-checkbox__hovered-span svelte-1irivyb" style="--n: 2"></span><span class="rules-checkbox__hovered-span svelte-1irivyb" style="--n: 3"></span><span class="rules-checkbox__hovered-span svelte-1irivyb" style="--n: 4"></span></label> </div> 
+			
+			<script>
+				{
+					__sveltekit_1na9wdv = {
+						assets: "/rock-paper-scissors-master",
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.1281a01d.js"),
+						import("./_app/immutable/entry/app.dce7acf0.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 2],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
