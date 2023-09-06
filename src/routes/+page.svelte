@@ -173,8 +173,6 @@
     :global(body) {
         font-family: "Barlow Semi Condensed", sans-serif;
         background: radial-gradient(circle at 54% 0%, rgba(31, 55, 86, 1) 10%, rgba(20, 21, 57, 1) 100%);
-        height: 100dvh;
-        overflow: hidden;
         color: var(--text-color);
         text-transform: uppercase;
         margin: 0;
@@ -211,7 +209,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 100dvh;
+        min-height: 100dvh;
     }
     .header {
         width: 100%;
@@ -253,6 +251,7 @@
         display: flex;
         flex-direction: column;
         flex: 1;
+        margin: 1em 0;
     }
     .game-board {
         display: flex;
