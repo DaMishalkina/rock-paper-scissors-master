@@ -251,7 +251,7 @@
         display: flex;
         flex-direction: column;
         flex: 1;
-        margin: 1em 0;
+        margin: 2em 0;
     }
     .game-board {
         display: flex;
