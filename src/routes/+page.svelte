@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ActionComponent from "$lib/components/ActionComponent.svelte";
     import ButtonWrapper from "$lib/components/ButtonWrapper.svelte";
     import Logo from "$lib/assets/logo-bonus.svg";
     import Modal from "$lib/components/Modal.svelte";
@@ -23,6 +24,9 @@
             }, ms)
         })
     }
+    const onRulesToggle = (event: CustomEvent) => {
+        $modal.open = event.detail;
+    }
     async function handlePlayerMove(event: CustomEvent) {
         playerMove = event.detail;
         await delay(() => {
@@ -46,6 +50,9 @@
         playerMove = "";
         resultMessage = "";
         winnerMove = "";
+    }
+    const handleReset = () => {
+        score.set("0");
     }
 
 </script>
@@ -134,21 +141,21 @@
             {/if}
         </section>
     </main>
-    <label class="rules-checkbox content-container__modal-checkbox">
-        <input
-                class="rules-checkbox__input"
-                on:change|preventDefault={() => $modal.open = true}
-                type="checkbox"
-                bind:checked={$modal.open}
-        />
-        <span>rules</span>
-        {#each [...Array(4).keys()] as i (i)}
-            <span
-                    class="rules-checkbox__hovered-span"
-                    style="--n: {i + 1}"
-            ></span>
-        {/each}
-    </label>
+    <footer class="footer content-container__footer">
+        <ActionComponent
+                isCheckbox={true}
+                isChecked={$modal.open}
+                on:check={onRulesToggle}
+        >
+            <span>rules</span>
+        </ActionComponent>
+        <ActionComponent
+                on:click={handleReset}
+                isDisabled={$score === "0"}
+        >
+            <span>reset</span>
+        </ActionComponent>
+    </footer>
 </div>
 
 <style>
@@ -319,52 +326,16 @@
     .main__modal-title {
         margin-bottom: 20px;
     }
-    .rules-checkbox {
-        font-size: 16px;
-        padding: 15px 38px 12px 38px;
-        border: 2px solid var(--border-color);
-        border-radius: 8px;
-        cursor: pointer;
-        letter-spacing: 0.25em;
-        align-self: center;
-        position: relative;
-        overflow: hidden;
+    .footer {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
     }
 
-    .rules-checkbox .rules-checkbox__hovered-span {
-        position: absolute;
-        width: 25%;
-        height: 100%;
-        background-color: var(--border-color);
-        transform: translateY(150%);
-        border-radius: 50%;
-        left: calc((var(--n) - 1) * 25%);
-        transition: 0.5s;
-        transition-delay: calc((var(--n) - 1) * 0.1s);
-        z-index: -1;
-    }
-    .rules-checkbox:hover {
-        transform: translateY(-3px);
-    }
-
-    .rules-checkbox:hover .rules-checkbox__hovered-span{
-        transform: translateY(0) scale(2);
-    }
-    .rules-checkbox:active {
-        transform: translateY(-1px);
-    }
-
-    .rules-checkbox__input {
-        height: 0;
-        width: 0;
-        visibility: hidden;
-    }
     @media (min-width: 1200px) {
         .content-container {
             padding: 46px 30px 30px;
-        }
-        .rules-checkbox {
-            align-self: flex-end;
         }
         .header {
             padding: 18px 18px 18px 30px;
@@ -410,6 +381,10 @@
             flex-basis: 0;
             order: 2;
             flex-grow: 1;
+        }
+        .footer {
+            justify-content: flex-start;
+            flex-direction: row-reverse;
         }
     }
 </style>
