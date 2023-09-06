@@ -119,8 +119,8 @@
                                     </Tooltip>
                                 </div>
                             {:else}
-                                <div class="move__empty-content">
-                                    <div></div>
+                                <div class="empty-move move__empty-content">
+                                    <div class="empty-move__item"></div>
                                 </div>
                             {/if}
                             <p>The house picked</p>
@@ -287,14 +287,37 @@
         align-items: center;
         height: 133px;
     }
-    .move__empty-content :global(div) {
+    .empty-move__item {
         display: flex;
         height: 97px;
         width: 97px;
         border-radius: 100px;
-        background: #1A2946;
+        background: linear-gradient(rgba(31, 55, 86, 1), rgba(20, 21, 57, 1));
         box-shadow: rgba(50, 50, 93, 0.25) 0 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0 18px 36px -18px inset;
+        position: relative;
+        border: 10rem;
+        animation: animate 1s linear infinite;
     }
+    .empty-move__item::before {
+        position: absolute;
+        content: "";
+        background: #1A2946;
+        border-radius: 10rem;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        height: 80%;
+    }
+    @keyframes animate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
     .float-content--hidden {
         visibility: hidden;
         opacity: 0;
