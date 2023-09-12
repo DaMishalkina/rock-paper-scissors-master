@@ -46,6 +46,8 @@
             else if (roles[computerMove].defeat.indexOf(playerMove) > -1){
                 winnerMove = computerMove;
                 resultMessage = "You lose";
+                const actualScore = Number($score) - 1;
+                score.set(String(actualScore))
             } else  {
                 winnerMove = playerMove;
                 resultMessage = "You win";
