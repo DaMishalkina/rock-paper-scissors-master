@@ -1,6 +1,8 @@
 <script lang="ts">
     import ActionComponent from "$lib/components/ActionComponent.svelte";
+    import AdvancedRulesIcon from "$lib/components/svgs/AdvancedRulesIcon.svelte";
     import ButtonWrapper from "$lib/components/ButtonWrapper.svelte";
+    import {gameMode} from "../stores/gameMode";
     import Logo from "$lib/assets/logo-bonus.svg";
     import Modal from "$lib/components/Modal.svelte";
     import {modal} from "../stores/modal";
@@ -9,6 +11,7 @@
     import RolesList from "$lib/features/RolesList/RolesList.svelte";
     import RulesIcon from "$lib/components/svgs/RulesIcon.svelte";
     import { score } from "../stores/score";
+    import Toggle from "$lib/components/Toggle.svelte"
     import Tooltip from "$lib/components/Tooltip.svelte";
 
 
@@ -16,6 +19,9 @@
     let computerMove = "";
     let resultMessage = "";
     let winnerMove = "";
+    $: computedRoles = $gameMode.advanced ? roles : Object.fromEntries(Object.entries(roles).filter((role) => {
+        return role[1].isAdvanced === $gameMode.advanced;
+    }));
 
     const delay = (callback: () => unknown, ms: number) => {
         return new Promise((resolve) => {
@@ -27,10 +33,13 @@
     const onRulesToggle = (event: CustomEvent) => {
         $modal.open = event.detail;
     }
+    const onGameModeToggle = (event: CustomEvent) => {
+        $gameMode.advanced = event.detail;
+    }
     async function handlePlayerMove(event: CustomEvent) {
         playerMove = event.detail;
         await delay(() => {
-            computerMove = Object.keys(roles)[Math.floor(Math.random() * 5)];
+            computerMove = Object.keys(computedRoles)[Math.floor(Math.random() * Object.keys(computedRoles).length)];
             if (computerMove === playerMove) {
                 resultMessage = "Draw";
             }
@@ -69,20 +78,27 @@
         {#if $modal.open === true}
             <Modal>
                 <h2 class="main__modal-title">Rules</h2>
-                <RulesIcon />
+                {#if !$gameMode.advanced}
+                    <RulesIcon />
+                {:else }
+                    <AdvancedRulesIcon />
+                {/if }
             </Modal>
         {/if}
         <section class="game-board main__game-board">
             {#if playerMove.length === 0}
-                <RolesList roles={roles} on:chipClick={handlePlayerMove} />
+                <RolesList
+                        bind:roles={computedRoles}
+                        on:chipClick={handlePlayerMove}
+                />
             {:else}
-                <div class="action-container game-board__action-container">
+                <div class="results-container game-board__results-container">
                     <ul
-                            class="action-items action-container__items"
-                            class:action-items--defined-moves={resultMessage.length > 0}
+                            class="results results-container__items"
+                            class:results--defined-moves={resultMessage.length > 0}
                     >
                         <li
-                                class="move action-item"
+                                class="move results-item"
                         >
                             <div>
                                 <Tooltip>
@@ -92,7 +108,6 @@
                                             shadowColor={roles[playerMove].shadowColor}
                                             linearGradient={roles[playerMove].linearGradient}
                                             isActive={playerMove === winnerMove}
-                                            isLarge={true}
                                     />
                                     <span slot="tooltip__content">
                                         {playerMove}
@@ -102,7 +117,7 @@
                             <p>You picked</p>
                         </li>
                         <li
-                                class="move action-item"
+                                class="move results-item"
                         >
                             {#if computerMove.length > 0}
                                 <div>
@@ -113,7 +128,6 @@
                                                 imageUrl={roles[computerMove].imageUrl}
                                                 shadowColor={roles[computerMove].shadowColor}
                                                 linearGradient={roles[computerMove].linearGradient}
-                                                isLarge={true}
                                         />
                                         <span slot="tooltip__content">{computerMove}</span>
                                     </Tooltip>
@@ -126,7 +140,7 @@
                             <p>The house picked</p>
                         </li>
                         <li
-                                class="float-content action-item"
+                                class="float-content results-item"
                                 class:float-content--hidden={resultMessage.length === 0}
                         >
                             <p class="float-content__message">{resultMessage}</p>
@@ -155,6 +169,7 @@
         >
             <span>reset</span>
         </ActionComponent>
+        <Toggle label="Advanced game" isToggled={$gameMode.advanced} on:toggle={onGameModeToggle}/>
     </footer>
 </div>
 
@@ -169,10 +184,12 @@
         --border-color: hsl(217, 16%, 45%);
         --dark-text-color: hsl(229, 25%, 31%);
         --score-text-color: hsl(229, 64%, 46%);
+        --bg--top: rgba(31, 55, 86, 1);
+        --bg--bottom: rgba(20, 21, 57, 1);
     }
     :global(body) {
         font-family: "Barlow Semi Condensed", sans-serif;
-        background: radial-gradient(circle at 54% 0%, rgba(31, 55, 86, 1) 10%, rgba(20, 21, 57, 1) 100%);
+        background: radial-gradient(circle at 54% 0%, var(--bg--top) 10%,var(--bg--bottom) 100%);
         color: var(--text-color);
         text-transform: uppercase;
         margin: 0;
@@ -258,14 +275,21 @@
         justify-content: center;
         flex: 1;
     }
+    /*.game-board__actions-container {*/
+    /*    display: flex;*/
+    /*    flex-direction: column;*/
+    /*    justify-content: space-around;*/
+    /*    align-items: center;*/
+    /*    gap: 2em;*/
+    /*}*/
 
-    .action-container {
+    .results-container {
         display: flex;
         flex-direction: column;
         flex: 1;
         justify-content: space-around;
     }
-    .action-items {
+    .results {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -350,8 +374,17 @@
     }
     .footer {
         display: flex;
+        flex-flow: wrap;
         gap: 32px;
         align-items: center;
+        justify-content: center;
+    }
+    .footer > :global(*):nth-child(1), .footer > :global(*):nth-child(2) {
+        flex-basis: calc(50% - 16px);
+        justify-content: center;
+    }
+    .footer > :global(*):nth-child(3) {
+       flex-basis: 100%;
         justify-content: center;
     }
 
@@ -390,16 +423,16 @@
             border-radius: 222px;
             flex: 1;
         }
-        .action-items--defined-moves {
+        .results--defined-moves {
             max-width: 940px;
         }
-        .action-item:nth-child(1) {
+        .results-item:nth-child(1) {
             order: 1;
         }
-        .action-item:nth-child(2) {
+        .results-item:nth-child(2) {
             order: 3;
         }
-        .action-item:nth-child(3) {
+        .results-item:nth-child(3) {
             flex-basis: 0;
             order: 2;
             flex-grow: 1;
@@ -407,6 +440,12 @@
         .footer {
             justify-content: flex-start;
             flex-direction: row-reverse;
+        }
+        .footer > :global(*):nth-child(1),.footer > :global(*):nth-child(2) {
+            flex: none;
+        }
+        .footer > :global(*):nth-child(3) {
+           flex: none;
         }
     }
 </style>

@@ -10,13 +10,15 @@
         isButton = false,
         isActive = false;
 
+    $: roleChipButtonLarge = isLarge ? "role-chip-button--large" : "";
+
     const shadowColorWithoutRGB = shadowColor.substring(4, shadowColor.length-1)
         .replace(/ /g, '');
 </script>
 
 {#if isButton}
     <ButtonWrapper
-            className="role-chip"
+            className="role-chip {roleChipButtonLarge}"
             backgroundColor={linearGradient}
             shadowColor={shadowColor}
             on:click
@@ -31,9 +33,8 @@
     </ButtonWrapper>
 {:else}
     <div
-            class="role-chip"
+            class="role-chip--without-click role-chip"
             class:role-chip--active={isActive}
-            class:role-chip--large={isLarge}
             style="
             --background-color: {linearGradient};
             --shadow-color: {shadowColor};
@@ -68,7 +69,7 @@
         background: var(--background-color);
         box-shadow: 0 4px 0 var(--shadow-color);
     }
-    .role-chip--large {
+    .role-chip--without-click, :global(.role-chip-button--large) {
         height: 133px;
         width: 133px;
         padding: 16px;
@@ -88,7 +89,7 @@
         max-height: 40px;
         max-width: 42px;
     }
-    .role-chip--large .role-chip__icon {
+    .role-chip--without-click .role-chip__icon, :global(.role-chip-button--large) .role-chip__icon {
         max-height: 45px;
         max-width: 53px;
     }
@@ -107,20 +108,35 @@
             max-height: 52px;
             max-width: 57px;
         }
-        .role-chip--large {
+        .role-chip--without-click  {
             width: 300px;
             height: 300px;
             border-radius: 300px;
             padding: 34px;
         }
-        .role-chip--large .role-chip__image-wrapper {
+        :global(.role-chip-button--large) {
+            width: 200px;
+            height: 200px;
+            border-radius: 200px;
+            padding: 24px;
+        }
+        .role-chip--without-click  .role-chip__image-wrapper {
             border-radius: 300px;
         }
-        .role-chip--large .role-chip__icon {
+        :global(.role-chip-button--large) .role-chip__image-wrapper {
+            border-radius: 200px;
+        }
+        .role-chip--without-click  .role-chip__icon {
             height: 120px;
             width: auto;
             max-height: 120px;
             max-width: 116px;
+        }
+        :global(.role-chip-button--large) .role-chip__icon {
+            height: 80px;
+            width: auto;
+            max-height: 80px;
+            max-width: 80px;
         }
 
     }
