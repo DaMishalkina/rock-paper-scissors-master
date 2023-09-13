@@ -60,6 +60,8 @@ This project was created using Svelte and SvelteKit, that I have tried for the v
 }
 ```
 
+- I ran into a problem with the reactively destructuring variables. So, in this project, I decided not to utilize destructure for variables that should be updated reactively.
+
 - I developed a system for switching between advanced and introductory game modes. However, advanced mode is the default for my app.
 
 - Moreover I have decided to use value of 1200px as min-width for desktop version. The reason is the same as in the previous case.
